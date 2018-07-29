@@ -69,13 +69,27 @@ def DnCNN_pretrained_weights(sigma, savefile=None, verbose=False):
         print ('pretained sigma %d is not available'%sigma)
         return
     
+    
+    # download the pretained weights
+    import os
+    import subprocess
+
+    here = os.path.dirname(__file__)
+    try:
+        os.stat(here+'/DnCNN')
+    except OSError:
+        print('downloading pretrained models')
+        subprocess.run(['git', 'clone',  'https://github.com/cszn/DnCNN.git'],cwd=here)
+           
+
+    # read the weights        
     import numpy as np
     from keras.models import save_model
     
     m = DnCNN()
 
     import hdf5storage
-    mat = hdf5storage.loadmat('DnCNN-matlab/model/specifics/sigma=%d.mat'%sigma)
+    mat = hdf5storage.loadmat(here+'/DnCNN/model/specifics/sigma=%d.mat'%sigma)
 
     t=0
     for i in [1] + list(range(3,len(m.layers),3)):
@@ -116,14 +130,28 @@ def DnCNN_C_pretrained_weights(sigma, savefile=None, verbose=False):
     if sigma  not in [5,10,15,25,35,50]:
         print ('pretained sigma %d is not available'%sigma)
         return
+
     
+    # download the pretained weights
+    import os
+    import subprocess
+
+    here = os.path.dirname(__file__)
+    try:
+        os.stat(here+'/DnCNN')
+    except OSError:
+        print('downloading pretrained models')
+        subprocess.run(['git', 'clone',  'https://github.com/cszn/DnCNN.git'],cwd=here)
+           
+    
+    # read the weights    
     import numpy as np
     from keras.models import save_model
     
     m = DnCNN_C()
 
     import hdf5storage
-    mat = hdf5storage.loadmat('DnCNN-matlab/model/specifics_color/color_sigma=%d.mat'%sigma)
+    mat = hdf5storage.loadmat(here+'/DnCNN/model/specifics_color/color_sigma=%d.mat'%sigma)
 
     t=0
     for i in [1] + list(range(3,len(m.layers),3)):
